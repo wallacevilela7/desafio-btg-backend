@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: desafio-btg
+
+  data:
+    mongodb:
+      authentication-database: admin
+      uri: mongodb://admin:123456@localhost:27017/
+      auto-index-creation: true
+      host: localhost
+      port: 27017
+      database: desafio-btg-db
+      username: admin
+      password: 123456
