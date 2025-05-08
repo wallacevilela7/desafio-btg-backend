@@ -26,6 +26,7 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
+
     public Long getOrderId() {
         return orderId;
     }
