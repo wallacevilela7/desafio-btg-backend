@@ -1,6 +1,9 @@
 package tech.wvs.desafiobtg.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import tech.wvs.desafiobtg.controller.dto.OrderResponse;
 import tech.wvs.desafiobtg.dto.OrderCreatedEvent;
 import tech.wvs.desafiobtg.entity.OrderEntity;
 import tech.wvs.desafiobtg.entity.OrderItem;
@@ -41,5 +44,12 @@ public class OrderService {
                 .map(item ->
                         new OrderItem(item.produto(), item.quantidade(), item.preco()))
                 .toList();
+    }
+
+    public Page<OrderResponse> findById(Long customerId, Integer page, Integer pageSize) {
+        var pageRequest = PageRequest.of(page, pageSize);
+
+        return repository.findAllByCustomerId(customerId, pageRequest)
+                .map(order -> new OrderResponse(order.getOrderId(), order.getTotal()));
     }
 }
