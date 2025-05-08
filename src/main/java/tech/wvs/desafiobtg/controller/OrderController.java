@@ -10,6 +10,8 @@ import tech.wvs.desafiobtg.controller.dto.OrderResponse;
 import tech.wvs.desafiobtg.controller.dto.PaginationResponse;
 import tech.wvs.desafiobtg.service.OrderService;
 
+import java.util.Map;
+
 @RestController
 public class OrderController {
 
@@ -25,9 +27,11 @@ public class OrderController {
                                                                  @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
         var response = orderService.findById(customerId, page, pageSize);
+        var totalOnOrders = orderService.findTotalOnOrdersByCustomerId(customerId);
 
         return ResponseEntity.ok(new ApiResponse<>(
-            response.getContent(),
+                Map.of("totalOnOrders", totalOnOrders),
+                response.getContent(),
                 new PaginationResponse(
                         response.getNumber(),
                         response.getSize(),

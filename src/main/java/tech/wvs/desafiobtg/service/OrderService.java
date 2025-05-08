@@ -1,7 +1,10 @@
 package tech.wvs.desafiobtg.service;
 
+import org.bson.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import tech.wvs.desafiobtg.controller.dto.OrderResponse;
 import tech.wvs.desafiobtg.dto.OrderCreatedEvent;
@@ -12,13 +15,18 @@ import tech.wvs.desafiobtg.repository.OrderRepository;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 @Service
 public class OrderService {
 
     private final OrderRepository repository;
 
-    public OrderService(OrderRepository orderRepository) {
+    private final MongoTemplate mongoTemplate;
+
+    public OrderService(OrderRepository orderRepository, MongoTemplate mongoTemplate) {
         this.repository = orderRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     public void save(OrderCreatedEvent event) {
@@ -51,5 +59,16 @@ public class OrderService {
 
         return repository.findAllByCustomerId(customerId, pageRequest)
                 .map(order -> new OrderResponse(order.getOrderId(), order.getTotal()));
+    }
+
+    public BigDecimal findTotalOnOrdersByCustomerId(Long customerId) {
+        var aggregation = newAggregation(
+                match(Criteria.where("customerId").is(customerId)),
+                group().sum("total").as("total")
+        );
+
+        var response = mongoTemplate.aggregate(aggregation, "tb_orders", Document.class);
+
+        return new BigDecimal(response.getUniqueMappedResult().get("total").toString());
     }
 }
