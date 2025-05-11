@@ -54,11 +54,9 @@ public class OrderService {
                 .toList();
     }
 
-    public Page<OrderResponse> findById(Long customerId, Integer page, Integer pageSize) {
-        var pageRequest = PageRequest.of(page, pageSize);
-
+    public Page<OrderResponse> findById(Long customerId, PageRequest pageRequest) {
         return repository.findAllByCustomerId(customerId, pageRequest)
-                .map(order -> new OrderResponse(order.getOrderId(), order.getTotal()));
+                .map(order -> new OrderResponse(order.getOrderId(), order.getCustomerId(), order.getTotal()));
     }
 
     public BigDecimal findTotalOnOrdersByCustomerId(Long customerId) {

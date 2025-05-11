@@ -1,5 +1,6 @@
 package tech.wvs.desafiobtg.controller;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ public class OrderController {
     public ResponseEntity<ApiResponse<OrderResponse>> listOrders(@PathVariable("customerId") Long customerId,
                                                                  @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
-        var response = orderService.findById(customerId, page, pageSize);
+        var response = orderService.findById(customerId, PageRequest.of(page, pageSize));
         var totalOnOrders = orderService.findTotalOnOrdersByCustomerId(customerId);
 
         return ResponseEntity.ok(new ApiResponse<>(
