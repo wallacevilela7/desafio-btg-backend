@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import tech.wvs.desafiobtg.controller.dto.OrderResponse;
 import tech.wvs.desafiobtg.factory.OrderResponseFactory;
 import tech.wvs.desafiobtg.service.OrderService;
 
